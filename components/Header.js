@@ -2,13 +2,16 @@ import React from "react";
 import Image from "next/image";
 import { AiOutlineSearch } from "react-icons/ai";
 
+const userAddress = "0x4ad...abcde";
+const isAuthenticated = true;
+
 const styles = {
   container: "flex w-screen h-16 bg-black px-24 py-3 mb-5 fixed",
   leftHeader: "flex flex-1",
   Logo: "object-cover cursor-pointer",
   searchWrapper: "flex flex-1",
   searchInputWrapper:
-    "text-white items-center flex flex-1 -ml-64 border border-gray-400 mr-64 hover:bg-[#1E2123] duration-300 p-3 rounder-lg",
+    "text-white items-center flex flex-1 -ml-64 border border-gray-400 mr-64 hover:bg-[#1E2123] duration-300 p-3 rounded-lg",
   searchIcon: "text-gray-400 text-3xl mr-3",
   searchInputWrapper: "text-gray-400 text-lg w-full",
   searchInput: "bg-transparent outline-none w-full",
@@ -35,9 +38,23 @@ const Header = () => {
         <div className={styles.menuItem}>Portfolio</div>
         <div className={styles.menuItem}>Cash</div>
         <div className={styles.menuItem}>Messages</div>
-        <div className={styles.menuItem} onClick={() => connectWallet()}>
-          Login
-        </div>
+
+        {isAuthenticated && (
+          <>
+            <div className={styles.menuItem}>{userAddress}</div>
+            <div className={styles.menuItem} onClick={() => logOut()}>
+              Logout
+            </div>
+          </>
+        )}
+
+        {!isAuthenticated && (
+          <>
+            <div className={styles.menuItem} onClick={() => connectWallet()}>
+              Login
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
