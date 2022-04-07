@@ -2,6 +2,8 @@
 import Header from "../components/Header";
 import PortfolioChart from "../components/PortfolioChart";
 import BuyTokens from "../components/BuyTokens";
+import Notice from "../components/Notice";
+import Assets from "../components/Assets";
 
 //Icons
 import { BiDotsHorizontalRounded } from "react-icons/bi";
@@ -63,7 +65,7 @@ export default function Home() {
               <BuyTokens />
             </div>
           </div>
-          {/* <Notice/> */}
+          <Notice/>
         </div>
         <div className={styles.rightMain}>
           <div className={styles.rightMainItem}>
@@ -71,7 +73,7 @@ export default function Home() {
             <BiDotsHorizontalRounded className={styles.moreOptions} />
           </div>
           {/* Map through every coin and for every coin make an Asset Component */}
-          {/* <Asset /> */}
+          <Assets coin={"BTC"} price={0.89}/>
 
           <div className={styles.rightMainItem}>
             <div className={styles.ItemTitle}>Lists</div>
