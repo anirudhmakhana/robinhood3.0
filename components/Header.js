@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
+import logo from "../assets/logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
-
-const userAddress = "0x4ad...abcde";
-const isAuthenticated = true;
+import { RobinhoodContext } from "../context/RobinhoodContext";
 
 const styles = {
   container: "flex w-screen h-16 bg-black px-24 py-3 mb-5 fixed",
@@ -18,6 +17,14 @@ const styles = {
   rightHeader: "flex items-center justify-end text-white gap-8",
 };
 const Header = () => {
+  const {
+    connectWallet,
+    signOut,
+    currentAccount,
+    isAuthenticated,
+    formattedAccount,
+    swapTokens,
+  } = useContext(RobinhoodContext);
   return (
     <div className={styles.container}>
       <div className={styles.leftHeader}>{/* Image */}</div>
@@ -41,9 +48,9 @@ const Header = () => {
 
         {isAuthenticated && (
           <>
-            <div className={styles.menuItem}>{userAddress}</div>
-            <div className={styles.menuItem} onClick={() => logOut()}>
-              Logout
+            <div className={styles.menuItem}>{formattedAccount}</div>
+            <div className={styles.menuItem} onClick={() => signOut()}>
+              signOut
             </div>
           </>
         )}
