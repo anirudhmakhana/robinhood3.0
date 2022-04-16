@@ -8,6 +8,13 @@ import Assets from "../components/Assets";
 //Icons
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
+
+//dependencies
+//Dependencies
+import axios from "axios";
+import { useState, useContext } from "react";
+import { RobinhoodContext } from "../context/RobinhoodContext";
+
 //Styles
 const styles = {
   wrapper: "w-screen h-screen flex flex-col",
@@ -34,14 +41,16 @@ const styles = {
   ItemTitle: "flex-1 font-bold",
   moreOptions: "cursor-pointer text-xl",
 };
-export default function Home() {
+export default function Home({ coins }) {
+  const [myCoins] = useState([...coins.slice(0, 15)]);
+  const { balance, swapError } = useContext(RobinhoodContext);
   return (
     <div className={styles.wrapper}>
       <Header />
       <div className={styles.mainContainer}>
         <div className={styles.leftMain}>
           <div className={styles.portfolioAmountContainer}>
-            <div className={styles.portfolioAmount}>23 ETH</div>
+            <div className={styles.portfolioAmount}>{balance} ETH</div>
             <div className={styles.portfolioPercent}>
               +0.0008(+0.57%)
               <span className={styles.pastHour}>Past Hour</span>
@@ -54,7 +63,7 @@ export default function Home() {
           </div>
           <div className={styles.buyingPowerContainer}>
             <div className={styles.buyingPowerTitle}>Buying Power</div>
-            <div className={styles.buyingPowerAmount}>12 ETH</div>
+            <div className={styles.buyingPowerAmount}>{balance} ETH</div>
           </div>
           <div className={styles.notice}>
             <div className={styles.noticeContainer}>
@@ -65,15 +74,20 @@ export default function Home() {
               <BuyTokens />
             </div>
           </div>
-          <Notice/>
+          <Notice />
         </div>
         <div className={styles.rightMain}>
           <div className={styles.rightMainItem}>
             <div className={styles.ItemTitle}>Crypto Currencies</div>
+
             <BiDotsHorizontalRounded className={styles.moreOptions} />
           </div>
-          {/* Map through every coin and for every coin make an Asset Component */}
-          <Assets coin={"BTC"} price={0.89}/>
+          {myCoins.map((coin) => {
+            let price = parseFloat(coin.price);
+            price = price.toFixed(2);
+
+            return <Assets key={coin.uuid} coin={coin} price={price} />;
+          })}
 
           <div className={styles.rightMainItem}>
             <div className={styles.ItemTitle}>Lists</div>
@@ -84,3 +98,30 @@ export default function Home() {
     </div>
   );
 }
+
+export const getStaticProps = async () => {
+  const options = {
+    method: "GET",
+    url: "https://coinranking1.p.rapidapi.com/coins",
+    params: {
+      referenceCurrencyUuid: "yhjMzLPhuIDl",
+      timePeriod: "24h",
+      tiers: "1",
+      orderBy: "marketCap",
+      orderDirection: "desc",
+      limit: "50",
+      offset: "0",
+    },
+    headers: {
+      "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
+      "X-RapidAPI-Key": "f627053784msh1839ce82182f580p16ba31jsn8d36f3f839db",
+    },
+  };
+
+  const res = await axios.request(options);
+  const coins = res.data.data.coins;
+
+  return {
+    props: { coins },
+  };
+};
